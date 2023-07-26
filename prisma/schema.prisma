@@ -21,7 +21,7 @@ model Register {
 
 model Login {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
+  username  String   
   ip        String
   timestamp DateTime @default(now())
 }
