@@ -12,35 +12,39 @@ export async function POST(request: Request) {
     return new NextResponse(JSON.stringify({ error: 'Variables not found!' }), { status: 404 })
   }
 
-  const prisma = new PrismaClient()
-  const register = await prisma.register.findFirst({
-    where: {
-      username: username
+  try {
+    const prisma = new PrismaClient()
+    const register = await prisma.register.findFirst({
+      where: {
+        username: username
+      }
+    })
+  
+    if (!register) {
+      return new NextResponse(JSON.stringify({ error: 'Username not waiting for registration!' }), { status: 404 })
     }
-  })
-
-  if (!register) {
-    return new NextResponse(JSON.stringify({ error: 'Username not waiting for registration!' }), { status: 404 })
+  
+    if (register.code !== code) {
+      return new NextResponse(JSON.stringify({ error: 'Invalid registration code!' }), { status: 400 })
+    }
+  
+    const hash = await bcrypt.hash(password, 10)
+  
+    await prisma.user.create({
+      data: {
+        username: username,
+        hash: hash
+      }
+    })
+  
+    await prisma.register.delete({
+      where: {
+        id: register.id
+      }
+    })
+  
+    return new NextResponse(JSON.stringify({ message: 'Username registered!' }), { status: 200 })
+  } catch (err) {
+    return new NextResponse(JSON.stringify({ error: err }), { status: 500 })
   }
-
-  if (register.code !== code) {
-    return new NextResponse(JSON.stringify({ error: 'Invalid registration code!' }), { status: 400 })
-  }
-
-  const hash = await bcrypt.hash(password, 10)
-
-  await prisma.user.create({
-    data: {
-      username: username,
-      hash: hash
-    }
-  })
-
-  await prisma.register.delete({
-    where: {
-      id: register.id
-    }
-  })
-
-  return new NextResponse(JSON.stringify({ message: 'Username registered!' }), { status: 200 })
-}
+} 
