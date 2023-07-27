@@ -43,16 +43,18 @@ const LoginPage = () => {
 
   return (
     <main className="h-screen w-full flex flex-col justify-center items-center gap-4">
-      <h1 className="text-white text-2xl font-semibold">Login</h1>
-      { error ? <p className="text-white bg-red-800 border border-red-500 p-2 px-4 rounded">{ error }</p> : <></> }
-      <div className='flex flex-col gap-2'>
-        <input type="text" name="username" id="username" placeholder='username' className='bg-neutral-800 rounded p-1 text-center text-white' />
-        <input type='password' name="password" id="password" placeholder='password' className='bg-neutral-800 rounded p-1 text-center text-white' />
+      <div className="bg-neutral-800 rounded-xl p-4 flex flex-col gap-2">
+        <h1 className="text-white text-2xl font-semibold text-center">Login</h1>
+        { error ? <p className="text-white bg-red-800 border border-red-500 p-2 px-4 rounded text-center">{ error }</p> : <></> }
+        <div className='flex flex-col gap-2'>
+          <input type="text" name="username" id="username" placeholder='username' className='bg-neutral-700 rounded p-1 text-center text-white' />
+          <input type='password' name="password" id="password" placeholder='password' className='bg-neutral-700 rounded p-1 text-center text-white' />
+        </div>
+        <button onClick={ onSubmit } className="bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded text-center duration-200">
+          Login
+        </button>
+        <p className='text-white text-center'>Not registered? <Link href={'/register'} className='underline'>Register</Link></p>
       </div>
-      <button onClick={ onSubmit } className="bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-4 rounded text-center duration-200">
-        Login
-      </button>
-      <p className='text-white text-center'>Not registered? <Link href={'/register'} className='underline'>Register</Link></p>
     </main>
   )
 }
